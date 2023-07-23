@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/longjoy/micro-go-book/ch7-rpc/basic/string-service"
 	"log"
 	"net"
 	"net/http"
 	"net/rpc"
+
+	service "github.com/longjoy/micro-go-book/ch7-rpc/basic/string-service"
 )
 
-func main() {
+func main1() {
 	stringService := new(service.StringService)
 	registerError := rpc.Register(stringService)
 	if registerError != nil {

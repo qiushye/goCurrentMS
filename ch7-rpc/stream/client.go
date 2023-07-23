@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/longjoy/micro-go-book/ch7-rpc/stream-pb"
-	"google.golang.org/grpc"
 	"io"
 	"log"
 	"strconv"
+	"time"
+
+	stream_pb "github.com/longjoy/micro-go-book/ch7-rpc/stream-pb"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -33,7 +35,7 @@ func main() {
 
 	sendClientStreamRequest(stringClient)
 
-	//sendClientAndServerStreamRequest(stringClient)
+	sendClientAndServerStreamRequest(stringClient)
 }
 
 func sendClientStreamRequest(client stream_pb.StringServiceClient) {
@@ -76,5 +78,6 @@ func sendClientAndServerStreamRequest(client stream_pb.StringServiceClient) {
 		}
 		log.Printf("sendClientAndServerStreamRequest Ret is : %s", reply.Ret)
 		i++
+		time.Sleep(time.Second)
 	}
 }

@@ -2,6 +2,10 @@ package conf
 
 import (
 	"fmt"
+	"net/http"
+	"os"
+	"strconv"
+
 	"github.com/go-kit/kit/log"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/bootstrap"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/discover"
@@ -9,9 +13,6 @@ import (
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	_ "github.com/openzipkin/zipkin-go/reporter/recorder"
 	"github.com/spf13/viper"
-	"net/http"
-	"os"
-	"strconv"
 )
 
 const (

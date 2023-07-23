@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/longjoy/micro-go-book/ch7-rpc/basic/string-service"
 	"log"
 	"net/rpc"
+
+	service "github.com/longjoy/micro-go-book/ch7-rpc/basic/string-service"
 )
 
 func main() {
@@ -24,7 +25,8 @@ func main() {
 
 	stringReq = &service.StringRequest{"ACD", "BDF"}
 	call := client.Go("StringService.Diff", stringReq, &reply, nil)
-	_ = <-call.Done
+	// _ = <-call.Done
+	fmt.Print(call.Args)
 	fmt.Printf("StringService Diff : %s diff %s = %s\n", stringReq.A, stringReq.B, reply)
 
 }

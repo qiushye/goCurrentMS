@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"strings"
+	"time"
 )
 
 // Service constants
@@ -49,6 +50,7 @@ func (s StringService) Diff(req StringRequest, ret *string) error {
 		*ret = ""
 		return nil
 	}
+	time.Sleep(time.Second)
 	res := ""
 	if len(req.A) >= len(req.B) {
 		for _, char := range req.B {

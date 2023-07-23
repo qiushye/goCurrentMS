@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"flag"
+	"net"
+	"os"
+
 	"github.com/go-kit/kit/log"
 	service "github.com/longjoy/micro-go-book/ch7-rpc/go-kit/string-service"
 	"github.com/longjoy/micro-go-book/ch7-rpc/pb"
 	"google.golang.org/grpc"
-	"net"
-	"os"
 )
 
-func main() {
+func main1() {
 
 	flag.Parse()
 

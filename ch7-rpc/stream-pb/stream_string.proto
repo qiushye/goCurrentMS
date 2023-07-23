@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pb;
 
+option go_package = "./stream-pb";
+
 service StringService{
     rpc Concat(StringRequest) returns (StringResponse) {}
     rpc LotsOfServerStream(StringRequest) returns (stream StringResponse) {}
