@@ -1,0 +1,1 @@
+- java的config-server服务端可以参考 https://github.com/qiushye/java-config-server
