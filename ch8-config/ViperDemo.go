@@ -3,9 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
 	"reflect"
+
+	"github.com/spf13/viper"
 )
 
 var Resume ResumeInformation
@@ -19,21 +20,22 @@ func init() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Printf("err:%s\n", err)
 	}
-	if err := sub("ResumeInformation", &Resume); err != nil {
-		log.Fatal("Fail to parse config", err)
-	}
+	viper.GetViper().Unmarshal(&Resume)
+	// if err := sub("ResumeInformation", &Resume); err != nil {
+	// 	log.Fatal("Fail to parse config", err)
+	// }
 }
 func initDefault() {
 	//设置读取的配置文件
 	viper.SetConfigName("resume_config")
 	//添加读取的配置文件路径
-	viper.AddConfigPath("./ch8-config/config/")
+	viper.AddConfigPath("./config/")
 	//windows环境下为%GOPATH，linux环境下为$GOPATH
 	viper.AddConfigPath("$GOPATH/src/")
 	//设置配置文件类型
 	viper.SetConfigType("yaml")
 }
-func main() {
+func main1() {
 	fmt.Printf(
 		"姓名: %s\n爱好: %s\n性别: %s \n年龄: %d \n",
 		Resume.Name,
@@ -72,7 +74,10 @@ type ResumeInformation struct {
 }
 
 type ResumeSetting struct {
-	RegisterTime      string
+	RegisterTime struct {
+		A string
+		B string
+	}
 	Address           string
 	ResumeInformation ResumeInformation
 }
@@ -84,10 +89,12 @@ func parseYaml(v *viper.Viper) {
 	}
 	fmt.Println("resume config:\n ", resumeConfig)
 }
+
+// 找到配置的子集？但是方法实现里append了原来的parent
 func sub(key string, value interface{}) error {
 	log.Printf("配置文件的前缀为：%v", key)
-	sub := viper.Sub(key)
+	sub := viper.Sub(key) // 获取配置树
+	fmt.Println(viper.AllKeys())
 	sub.AutomaticEnv()
-	sub.SetEnvPrefix(key)
 	return sub.Unmarshal(value)
 }

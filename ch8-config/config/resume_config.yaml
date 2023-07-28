@@ -1,4 +1,6 @@
-RegisterTime: "2019-6-18 10:00:00"
+RegisterTime: 
+  A:
+  B:
 Address: "Shanghai"
 ResumeInformation:
   Name: "aoho"

@@ -3,16 +3,17 @@ package conf
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
-	_ "github.com/streadway/amqp"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/spf13/viper"
+	_ "github.com/streadway/amqp"
 )
 
 const (
 	kAppName       = "APP_NAME"
-	kConfigServer  = "CONFIG_SERVER"
+	kConfigServer  = "lsof"
 	kConfigLabel   = "CONFIG_LABEL"
 	kConfigProfile = "CONFIG_PROFILE"
 	kConfigType    = "CONFIG_TYPE"
@@ -49,7 +50,7 @@ func initDefault() {
 	viper.SetDefault(kConfigLabel, "master")
 	viper.SetDefault(kConfigProfile, "dev")
 	viper.SetDefault(kConfigType, "yaml")
-	viper.SetDefault(kAmqpURI, "amqp://admin:admin@114.67.98.210:5672")
+	viper.SetDefault(kAmqpURI, "amqp://guest:guest@127.0.0.1:5672")
 
 }
 func handleRefreshEvent(body []byte, consumerTag string) {
@@ -62,7 +63,7 @@ func handleRefreshEvent(body []byte, consumerTag string) {
 		if strings.Contains(updateToken.DestinationService, consumerTag) {
 			log.Println("Reloading Viper config from Spring Cloud Config server")
 			loadRemoteConfig()
-			log.Println(viper.GetString("resume.name"))
+			log.Println(viper.GetString("resume.name"), viper.GetString("resume.age"))
 		}
 	}
 }

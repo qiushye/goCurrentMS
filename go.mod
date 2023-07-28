@@ -28,7 +28,7 @@ require (
 	github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.16.0
-	github.com/streadway/amqp v1.0.0
+	github.com/streadway/amqp v1.1.0
 	github.com/unknwon/com v1.0.1
 	go.etcd.io/etcd v3.3.15+incompatible
 	golang.org/x/time v0.1.0
