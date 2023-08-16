@@ -1,11 +1,12 @@
 package conf
 
 import (
-	"github.com/coreos/etcd/clientv3"
+	"sync"
+
 	"github.com/go-redis/redis"
 	"github.com/longjoy/micro-go-book/ch13-seckill/sk-core/service/srv_limit"
 	"github.com/samuel/go-zookeeper/zk"
-	"sync"
+	"go.etcd.io/etcd/clientv3"
 )
 
 var (

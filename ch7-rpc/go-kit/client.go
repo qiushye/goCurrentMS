@@ -10,7 +10,6 @@ import (
 	service "github.com/longjoy/micro-go-book/ch7-rpc/go-kit/string-service"
 	"github.com/longjoy/micro-go-book/ch7-rpc/pb"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
@@ -18,7 +17,7 @@ func main() {
 	ctx := context.Background()
 	// 使用context的Timeout替换grpc的Timeout Options, 使用WithTransportCredentials替换WithInsecure
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
-	conn, err := grpc.DialContext(ctx, "127.0.0.1:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("gRPC dial err:", err)
 		cancel()

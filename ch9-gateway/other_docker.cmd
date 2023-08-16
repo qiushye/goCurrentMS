@@ -1,0 +1,1 @@
+docker run --rm --network=kong-net -e "KONG-DATABASE=postgres" -e "KONG-PG-HOST=kong-database" kong:latest kong migrations bootstrap

@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/coreos/etcd/clientv3"
 	conf "github.com/longjoy/micro-go-book/ch13-seckill/pkg/config"
+	"go.etcd.io/etcd/clientv3"
 	"log"
 	"testing"
 	"time"
