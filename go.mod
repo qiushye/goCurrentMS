@@ -22,7 +22,7 @@ require (
 	github.com/hashicorp/consul/api v1.20.0
 	github.com/juju/ratelimit v1.0.1
 	github.com/opentracing/opentracing-go v1.2.0
-	// github.com/openzipkin-contrib/zipkin-go-opentracing v0.5.0
+	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
 	github.com/openzipkin/zipkin-go v0.2.5
 	github.com/pborman/uuid v1.2.0
 	github.com/prometheus/client_golang v1.11.0
@@ -39,7 +39,7 @@ require (
 )
 
 require (
-	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
+	github.com/pkg/errors v0.9.1
 	google.golang.org/protobuf v1.30.0
 )
 
@@ -101,11 +101,9 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/opentracing-contrib/go-observer v0.0.0-20170622124052-a52f23424492 // indirect
-	github.com/sony/gobreaker v0.4.1 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/streadway/handy v0.0.0-20200128134331-0f66f006fb2e // indirect
 	golang.org/x/net v0.10.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 )

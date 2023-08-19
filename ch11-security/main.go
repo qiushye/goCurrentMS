@@ -4,6 +4,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
+	"strconv"
+	"syscall"
+
 	"github.com/longjoy/micro-go-book/ch11-security/config"
 	"github.com/longjoy/micro-go-book/ch11-security/endpoint"
 	"github.com/longjoy/micro-go-book/ch11-security/model"
@@ -11,11 +17,6 @@ import (
 	"github.com/longjoy/micro-go-book/ch11-security/transport"
 	"github.com/longjoy/micro-go-book/common/discover"
 	uuid "github.com/satori/go.uuid"
-	"net/http"
-	"os"
-	"os/signal"
-	"strconv"
-	"syscall"
 )
 
 func main() {
@@ -23,8 +24,8 @@ func main() {
 	var (
 		servicePort = flag.Int("service.port", 10098, "service port")
 		serviceHost = flag.String("service.host", "127.0.0.1", "service host")
-		consulPort = flag.Int("consul.port", 8500, "consul port")
-		consulHost = flag.String("consul.host", "127.0.0.1", "consul host")
+		consulPort  = flag.Int("consul.port", 8500, "consul port")
+		consulHost  = flag.String("consul.host", "127.0.0.1", "consul host")
 		serviceName = flag.String("service.name", "oauth", "service name")
 	)
 
@@ -33,11 +34,10 @@ func main() {
 	ctx := context.Background()
 	errChan := make(chan error)
 
-
 	var discoveryClient discover.DiscoveryClient
 	discoveryClient, err := discover.NewKitDiscoverClient(*consulHost, *consulPort)
 
-	if err != nil{
+	if err != nil {
 		config.Logger.Println("Get Consul Client failed")
 		os.Exit(-1)
 
@@ -51,12 +51,12 @@ func main() {
 	var clientDetailsService service.ClientDetailsService
 	var srv service.Service
 
-
-	tokenEnhancer = service.NewJwtTokenEnhancer("secret")
-	tokenStore = service.NewJwtTokenStore(tokenEnhancer.(*service.JwtTokenEnhancer))
+	jwtTokenEnhancer := service.NewJwtTokenEnhancer("secret")
+	tokenEnhancer = jwtTokenEnhancer
+	tokenStore = service.NewJwtTokenStore(jwtTokenEnhancer)
 	tokenService = service.NewTokenService(tokenStore, tokenEnhancer)
 
-	userDetailsService = service.NewInMemoryUserDetailsService([] *model.UserDetails{{
+	userDetailsService = service.NewInMemoryUserDetailsService([]*model.UserDetails{{
 		Username:    "simple",
 		Password:    "123456",
 		UserId:      1,
@@ -68,21 +68,19 @@ func main() {
 			UserId:      1,
 			Authorities: []string{"Admin"},
 		}})
-	clientDetailsService = service.NewInMemoryClientDetailService([] *model.ClientDetails{{
+	clientDetailsService = service.NewInMemoryClientDetailService([]*model.ClientDetails{{
 		"clientId",
 		"clientSecret",
 		1800,
 		18000,
 		"http://127.0.0.1",
-		[] string{"password", "refresh_token"},
+		[]string{"password", "refresh_token"},
 	}})
 
 	tokenGranter = service.NewComposeTokenGranter(map[string]service.TokenGranter{
-		"password": service.NewUsernamePasswordTokenGranter("password", userDetailsService,  tokenService),
-		"refresh_token": service.NewRefreshGranter("refresh_token", userDetailsService,  tokenService),
-
+		"password":      service.NewUsernamePasswordTokenGranter("password", userDetailsService, tokenService),
+		"refresh_token": service.NewRefreshGranter("refresh_token", userDetailsService, tokenService),
 	})
-
 
 	tokenEndpoint := endpoint.MakeTokenEndpoint(tokenGranter, clientDetailsService)
 	tokenEndpoint = endpoint.MakeClientAuthorizationMiddleware(config.KitLogger)(tokenEndpoint)
@@ -90,7 +88,6 @@ func main() {
 	checkTokenEndpoint = endpoint.MakeClientAuthorizationMiddleware(config.KitLogger)(checkTokenEndpoint)
 
 	srv = service.NewCommonService()
-
 
 	simpleEndpoint := endpoint.MakeSimpleEndpoint(srv)
 	simpleEndpoint = endpoint.MakeOAuth2AuthorizationMiddleware(config.KitLogger)(simpleEndpoint)
@@ -102,11 +99,11 @@ func main() {
 	healthEndpoint := endpoint.MakeHealthCheckEndpoint(srv)
 
 	endpts := endpoint.OAuth2Endpoints{
-		TokenEndpoint:tokenEndpoint,
-		CheckTokenEndpoint:checkTokenEndpoint,
+		TokenEndpoint:       tokenEndpoint,
+		CheckTokenEndpoint:  checkTokenEndpoint,
 		HealthCheckEndpoint: healthEndpoint,
-		SimpleEndpoint:simpleEndpoint,
-		AdminEndpoint:adminEndpoint,
+		SimpleEndpoint:      simpleEndpoint,
+		AdminEndpoint:       adminEndpoint,
 	}
 
 	//创建http.Handler
@@ -114,18 +111,17 @@ func main() {
 
 	instanceId := *serviceName + "-" + uuid.NewV4().String()
 
-
 	//http server
 	go func() {
 		config.Logger.Println("Http Server start at port:" + strconv.Itoa(*servicePort))
 		//启动前执行注册
-		if !discoveryClient.Register(*serviceName, instanceId, "/health", *serviceHost,  *servicePort, nil, config.Logger){
-			config.Logger.Printf("use-string-service for service %s failed.", serviceName)
+		if !discoveryClient.Register(*serviceName, instanceId, "/health", *serviceHost, *servicePort, nil, config.Logger) {
+			config.Logger.Printf("use-string-service for service %s failed.", *serviceName)
 			// 注册失败，服务启动失败
 			os.Exit(-1)
 		}
 		handler := r
-		errChan <- http.ListenAndServe(":"  + strconv.Itoa(*servicePort), handler)
+		errChan <- http.ListenAndServe(":"+strconv.Itoa(*servicePort), handler)
 	}()
 
 	go func() {
