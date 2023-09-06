@@ -2,11 +2,12 @@ package setup
 
 import (
 	"fmt"
-	conf "github.com/longjoy/micro-go-book/ch13-seckill/pkg/config"
-	"github.com/samuel/go-zookeeper/zk"
 	"log"
 	"testing"
 	"time"
+
+	conf "github.com/longjoy/micro-go-book/ch13-seckill/pkg/config"
+	"github.com/samuel/go-zookeeper/zk"
 )
 
 func ZkStateStringFormat(s *zk.Stat) string {
@@ -26,7 +27,7 @@ func waitSecProductEvent(event zk.Event) {
 }
 
 func TestInitZK(t *testing.T) {
-	var hosts = []string{"39.98.179.73:2181"}
+	var hosts = []string{"127.0.0.1:2181"}
 	option := zk.WithEventCallback(waitSecProductEvent)
 	conn, _, err := zk.Connect(hosts, time.Second*5, option)
 	if err != nil {

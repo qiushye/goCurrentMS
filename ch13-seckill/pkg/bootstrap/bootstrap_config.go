@@ -2,8 +2,9 @@ package bootstrap
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"log"
+
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -24,10 +25,12 @@ func init() {
 	if err := subParse("config", &ConfigServerConfig); err != nil {
 		log.Fatal("Fail to parse config server", err)
 	}
+	println(ConfigServerConfig.Id)
 
 	if err := subParse("rpc", &RpcConfig); err != nil {
 		log.Fatal("Fail to parse rpc server", err)
 	}
+	println(RpcConfig.Port)
 }
 func initBootstrapConfig() {
 	//设置读取的配置文件

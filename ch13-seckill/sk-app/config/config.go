@@ -1,6 +1,9 @@
 package config
 
 import (
+	"os"
+	"sync"
+
 	"github.com/go-kit/kit/log"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/bootstrap"
 	_ "github.com/longjoy/micro-go-book/ch13-seckill/pkg/bootstrap"
@@ -10,8 +13,6 @@ import (
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	_ "github.com/openzipkin/zipkin-go/reporter/recorder"
 	"github.com/spf13/viper"
-	"os"
-	"sync"
 )
 
 const (
@@ -35,13 +36,13 @@ func init() {
 	if err := conf.Sub("mysql", &conf.MysqlConfig); err != nil {
 		Logger.Log("Fail to parse mysql", err)
 	}
-	//if err := conf.Sub("trace", &conf.TraceConfig); err != nil {
-	//	Logger.Log("Fail to parse trace", err)
-	//}
+	if err := conf.Sub("trace", &conf.TraceConfig); err != nil {
+		Logger.Log("Fail to parse trace", err)
+	}
 
-	//if err := conf.Sub("trace", &conf.TraceConfig); err != nil {
-	//	Logger.Log("Fail to parse trace", err)
-	//}
+	if err := conf.Sub("trace", &conf.TraceConfig); err != nil {
+		Logger.Log("Fail to parse trace", err)
+	}
 
 	if err := conf.Sub("service", &conf.SecKill); err != nil {
 		Logger.Log("Fail to parse trace", err)
@@ -51,9 +52,9 @@ func init() {
 		Logger.Log("Fail to parse trace", err)
 	}
 
-	//zipkinUrl := "http://" + conf.TraceConfig.Host + ":" + conf.TraceConfig.Port + conf.TraceConfig.Url
-	//Logger.Log("zipkin url", zipkinUrl)
-	//initTracer(zipkinUrl)
+	zipkinUrl := "http://" + conf.TraceConfig.Host + ":" + conf.TraceConfig.Port + conf.TraceConfig.Url
+	Logger.Log("zipkin url", zipkinUrl)
+	initTracer(zipkinUrl)
 }
 
 func initDefault() {

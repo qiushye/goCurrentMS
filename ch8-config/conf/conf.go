@@ -33,7 +33,7 @@ type ResumeConfig struct {
 func init() {
 	viper.AutomaticEnv()
 	initDefault()
-	go StartListener(viper.GetString(kAppName), viper.GetString(kAmqpURI), "springCloudBus")
+	// go StartListener(viper.GetString(kAppName), viper.GetString(kAmqpURI), "springCloudBus")
 
 	if err := loadRemoteConfig(); err != nil {
 		log.Fatal("Fail to load config", err)
@@ -50,7 +50,7 @@ func initDefault() {
 	viper.SetDefault(kConfigLabel, "master")
 	viper.SetDefault(kConfigProfile, "dev")
 	viper.SetDefault(kConfigType, "yaml")
-	viper.SetDefault(kAmqpURI, "amqp://guest:guest@127.0.0.1:5672")
+	// viper.SetDefault(kAmqpURI, "amqp://guest:guest@127.0.0.1:5672")
 
 }
 func handleRefreshEvent(body []byte, consumerTag string) {

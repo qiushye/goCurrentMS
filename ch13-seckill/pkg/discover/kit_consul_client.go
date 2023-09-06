@@ -2,12 +2,13 @@ package discover
 
 import (
 	"fmt"
+	"log"
+	"strconv"
+
 	"github.com/go-kit/kit/sd/consul"
 	"github.com/hashicorp/consul/api"
 	"github.com/hashicorp/consul/api/watch"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/common"
-	"log"
-	"strconv"
 )
 
 func New(consulHost string, consulPort string) *DiscoveryClientInstance {
@@ -54,10 +55,9 @@ func (consulClient *DiscoveryClientInstance) Register(instanceId, svcHost, healt
 
 	// 2. 发送服务注册到 Consul 中
 	err := consulClient.client.Register(serviceRegistration)
-
 	if err != nil {
 		if logger != nil {
-			logger.Println("Register Service Error!")
+			logger.Println("Register Service Error: ", err.Error())
 		}
 		return false
 	}

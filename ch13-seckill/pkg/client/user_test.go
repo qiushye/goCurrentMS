@@ -3,11 +3,12 @@ package client
 import (
 	"context"
 	"fmt"
-	"github.com/longjoy/micro-go-book/ch13-seckill/pb"
-	"github.com/opentracing/opentracing-go"
-	zipkin "github.com/openzipkin-contrib/zipkin-go-opentracing"
 	"log"
 	"testing"
+
+	"github.com/longjoy/micro-go-book/ch13-seckill/pb"
+	"github.com/openzipkin/zipkin-go"
+	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 )
 
 func TestUserClientImpl_CheckUser(t *testing.T) {
@@ -23,25 +24,34 @@ func TestUserClientImpl_CheckUser(t *testing.T) {
 	}
 }
 
-func genTracerAct(tracer opentracing.Tracer) opentracing.Tracer {
+func genTracerAct(tracer *zipkin.Tracer) *zipkin.Tracer {
 	if tracer != nil {
 		return tracer
 	}
-	zipkinUrl := "http://114.67.98.210:9411/api/v2/spans"
+	zipkinUrl := "http://127.0.0.1:9411/api/v2/spans"
 	zipkinRecorder := "localhost:12344"
-	collector, err := zipkin.NewHTTPCollector(zipkinUrl)
-	if err != nil {
-		log.Fatalf("zipkin.NewHTTPCollector err: %v", err)
-	}
+	// collector, err := zipkin.NewHTTPCollector(zipkinUrl)
+	// if err != nil {
+	// 	log.Fatalf("zipkin.NewHTTPCollector err: %v", err)
+	// }
 
-	recorder := zipkin.NewRecorder(collector, false, zipkinRecorder, "user-client")
+	reporter := zipkinhttp.NewReporter(zipkinUrl)
 
-	res, err := zipkin.NewTracer(
-		recorder, zipkin.ClientServerSameSpan(true),
+	// recorder := zipkin.NewRecorder(collector, false, zipkinRecorder, "user-client")
+	zEP, _ := zipkin.NewEndpoint("user-client", zipkinRecorder)
+	zipkinTracer, err := zipkin.NewTracer(
+		reporter, zipkin.WithLocalEndpoint(zEP), zipkin.WithNoopTracer(false),
 	)
 	if err != nil {
 		log.Fatalf("zipkin.NewTracer err: %v", err)
 	}
-	return res
+
+	// res, err := zipkin.NewTracer(
+	// 	reporter, zipkin.ClientServerSameSpan(true),
+	// )
+	// if err != nil {
+	// 	log.Fatalf("zipkin.NewTracer err: %v", err)
+	// }
+	return zipkinTracer
 
 }

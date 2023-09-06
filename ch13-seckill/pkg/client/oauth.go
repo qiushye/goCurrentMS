@@ -2,24 +2,25 @@ package client
 
 import (
 	"context"
+
 	"github.com/longjoy/micro-go-book/ch13-seckill/pb"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/discover"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/loadbalance"
-	"github.com/opentracing/opentracing-go"
+	"github.com/openzipkin/zipkin-go"
 )
 
 type OAuthClient interface {
-	CheckToken(ctx context.Context, tracer opentracing.Tracer, request *pb.CheckTokenRequest) (*pb.CheckTokenResponse, error)
+	CheckToken(ctx context.Context, tracer *zipkin.Tracer, request *pb.CheckTokenRequest) (*pb.CheckTokenResponse, error)
 }
 
 type OAuthClientImpl struct {
 	manager     ClientManager
 	serviceName string
 	loadBalance loadbalance.LoadBalance
-	tracer      opentracing.Tracer
+	tracer      *zipkin.Tracer
 }
 
-func (impl *OAuthClientImpl) CheckToken(ctx context.Context, tracer opentracing.Tracer, request *pb.CheckTokenRequest) (*pb.CheckTokenResponse, error) {
+func (impl *OAuthClientImpl) CheckToken(ctx context.Context, tracer *zipkin.Tracer, request *pb.CheckTokenRequest) (*pb.CheckTokenResponse, error) {
 	response := new(pb.CheckTokenResponse)
 	if err := impl.manager.DecoratorInvoke("/pb.OAuthService/CheckToken", "token_check", tracer, ctx, request, response); err == nil {
 		return response, nil
@@ -27,7 +28,7 @@ func (impl *OAuthClientImpl) CheckToken(ctx context.Context, tracer opentracing.
 		return nil, err
 	}
 }
-func NewOAuthClient(serviceName string, lb loadbalance.LoadBalance, tracer opentracing.Tracer) (OAuthClient, error) {
+func NewOAuthClient(serviceName string, lb loadbalance.LoadBalance, tracer *zipkin.Tracer) (OAuthClient, error) {
 	if serviceName == "" {
 		serviceName = "oauth"
 	}
@@ -37,10 +38,10 @@ func NewOAuthClient(serviceName string, lb loadbalance.LoadBalance, tracer opent
 
 	return &OAuthClientImpl{
 		manager: &DefaultClientManager{
-			serviceName: serviceName,
-			loadBalance: lb,
-			discoveryClient:discover.ConsulService,
-			logger:discover.Logger,
+			serviceName:     serviceName,
+			loadBalance:     lb,
+			discoveryClient: discover.ConsulService,
+			logger:          discover.Logger,
 		},
 		serviceName: serviceName,
 		loadBalance: lb,

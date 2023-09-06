@@ -2,14 +2,15 @@ package client
 
 import (
 	"context"
+
 	"github.com/longjoy/micro-go-book/ch13-seckill/pb"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/discover"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/loadbalance"
-	"github.com/opentracing/opentracing-go"
+	"github.com/openzipkin/zipkin-go"
 )
 
 type UserClient interface {
-	CheckUser(ctx context.Context, tracer opentracing.Tracer, request *pb.UserRequest) (*pb.UserResponse, error)
+	CheckUser(ctx context.Context, tracer *zipkin.Tracer, request *pb.UserRequest) (*pb.UserResponse, error)
 }
 
 type UserClientImpl struct {
@@ -19,10 +20,10 @@ type UserClientImpl struct {
 	manager     ClientManager
 	serviceName string
 	loadBalance loadbalance.LoadBalance
-	tracer      opentracing.Tracer
+	tracer      *zipkin.Tracer
 }
 
-func (impl *UserClientImpl) CheckUser(ctx context.Context, tracer opentracing.Tracer, request *pb.UserRequest) (*pb.UserResponse, error) {
+func (impl *UserClientImpl) CheckUser(ctx context.Context, tracer *zipkin.Tracer, request *pb.UserRequest) (*pb.UserResponse, error) {
 	response := new(pb.UserResponse)
 	if err := impl.manager.DecoratorInvoke("/pb.UserService/Check", "user_check", tracer, ctx, request, response); err == nil {
 		return response, nil
@@ -31,7 +32,7 @@ func (impl *UserClientImpl) CheckUser(ctx context.Context, tracer opentracing.Tr
 	}
 }
 
-func NewUserClient(serviceName string, lb loadbalance.LoadBalance, tracer opentracing.Tracer) (UserClient, error) {
+func NewUserClient(serviceName string, lb loadbalance.LoadBalance, tracer *zipkin.Tracer) (UserClient, error) {
 	if serviceName == "" {
 		serviceName = "user"
 	}
@@ -41,10 +42,10 @@ func NewUserClient(serviceName string, lb loadbalance.LoadBalance, tracer opentr
 
 	return &UserClientImpl{
 		manager: &DefaultClientManager{
-			serviceName: serviceName,
-			loadBalance: lb,
-			discoveryClient:discover.ConsulService,
-			logger:discover.Logger,
+			serviceName:     serviceName,
+			loadBalance:     lb,
+			discoveryClient: discover.ConsulService,
+			logger:          discover.Logger,
 		},
 		serviceName: serviceName,
 		loadBalance: lb,

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"os"
+
 	"github.com/go-kit/kit/log"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pkg/bootstrap"
 	_ "github.com/longjoy/micro-go-book/ch13-seckill/pkg/bootstrap"
@@ -9,7 +11,6 @@ import (
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	_ "github.com/openzipkin/zipkin-go/reporter/recorder"
 	"github.com/spf13/viper"
-	"os"
 )
 
 const (
@@ -26,9 +27,9 @@ func init() {
 	viper.AutomaticEnv()
 	initDefault()
 
-	if err := conf.LoadRemoteConfig(); err != nil {
-		Logger.Log("Fail to load remote config", err)
-	}
+	// if err := conf.LoadRemoteConfig(); err != nil {
+	// 	Logger.Log("Fail to load remote config", err)
+	// }
 
 	if err := conf.Sub("mysql", &conf.MysqlConfig); err != nil {
 		Logger.Log("Fail to parse mysql", err)

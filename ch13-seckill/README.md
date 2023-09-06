@@ -17,6 +17,14 @@
 - 4 部署 Config-Service
 参考书籍第八章8.3.1小节 在ch8-config文件夹下有 config-service项目，
 在yml文件中配置对应的git项目地址和consul地址，构建并运行Java程序，将config-service注册到consul上
-- 5 修改bootstrap文件
+- 5 启动zookeeper: 
+  cd kafka_2.12-3.5.1
+  ./bin/zookeeper-server-start.sh config/zookeeper.properties
+- 6 安装和启动etcd
+  brew install etcd
+  brew services start etcd
+- 7 启动zipkin:
+  docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
+- 8 修改bootstrap文件
 修改各个项目中的bootstrap.yml文件discover相关的consul地址和config-service的相关配置
 

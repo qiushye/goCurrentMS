@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/gohouse/gorose/v2"
 	conf "github.com/longjoy/micro-go-book/ch13-seckill/pkg/config"
 	"github.com/longjoy/micro-go-book/ch13-seckill/sk-admin/model"
 	"github.com/samuel/go-zookeeper/zk"
 	"github.com/unknwon/com"
-	"log"
-	"time"
 )
 
 type ActivityService interface {
@@ -96,7 +97,7 @@ func (p ActivityServiceImpl) syncToZk(activity *model.Activity) error {
 	secProductInfo.BuyRate = activity.BuyRate
 	secProductInfoList = append(secProductInfoList, secProductInfo)
 
-	data, err := json.Marshal(secProductInfoList)
+	byteData, err := json.Marshal(secProductInfoList)
 	if err != nil {
 		log.Printf("json marshal failed, err : %v", err)
 		return err
@@ -104,7 +105,7 @@ func (p ActivityServiceImpl) syncToZk(activity *model.Activity) error {
 
 	conn := conf.Zk.ZkConn
 
-	var byteData = []byte(string(data))
+	// var byteData = []byte(string(data))
 	var flags int32 = 0
 	// permission
 	var acls = zk.WorldACL(zk.PermAll)
@@ -123,7 +124,7 @@ func (p ActivityServiceImpl) syncToZk(activity *model.Activity) error {
 		}
 	}
 
-	log.Printf("put to zk success, data = [%v]", string(data))
+	log.Printf("put to zk success, data = [%v]", string(byteData))
 	return nil
 }
 

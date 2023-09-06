@@ -4,6 +4,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	kitzipkin "github.com/go-kit/kit/tracing/zipkin"
 	"github.com/longjoy/micro-go-book/ch13-seckill/pb"
@@ -21,12 +28,6 @@ import (
 	"golang.org/x/time/rate"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func main() {
@@ -83,7 +84,7 @@ func main() {
 	//http server
 	go func() {
 		fmt.Println("Http Server start at port:" + *servicePort)
-		mysql.InitMysql(conf.MysqlConfig.Host, conf.MysqlConfig.Port, conf.MysqlConfig.User, conf.MysqlConfig.Pwd, conf.MysqlConfig.Db)
+		mysql.InitMysql(conf.MysqlConfig.Host, "3306", conf.MysqlConfig.User, conf.MysqlConfig.Pwd, conf.MysqlConfig.Db)
 		//启动前执行注册
 		register.Register()
 		handler := r

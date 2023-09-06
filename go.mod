@@ -18,11 +18,9 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.8.0
-	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645
 	github.com/hashicorp/consul/api v1.20.0
 	github.com/juju/ratelimit v1.0.1
 	github.com/opentracing/opentracing-go v1.2.0
-	github.com/openzipkin-contrib/zipkin-go-opentracing v0.4.5
 	github.com/openzipkin/zipkin-go v0.2.5
 	github.com/pborman/uuid v1.2.0
 	github.com/prometheus/client_golang v1.11.0
@@ -32,7 +30,6 @@ require (
 	github.com/spf13/viper v1.16.0
 	github.com/streadway/amqp v1.1.0
 	github.com/unknwon/com v1.0.1
-	go.etcd.io/etcd v3.3.15+incompatible
 	golang.org/x/time v0.1.0
 	google.golang.org/grpc v1.56.2
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
@@ -40,13 +37,13 @@ require (
 
 require (
 	github.com/pkg/errors v0.9.1
+	go.etcd.io/etcd v0.0.0-20191023171146-3cf2f69b5738
 	google.golang.org/protobuf v1.30.0
 )
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
-	github.com/coreos/etcd v3.3.27+incompatible // indirect
 	github.com/coreos/pkg v0.0.0-20160727233714-3ac0863d7acf // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
@@ -84,7 +81,6 @@ require (
 
 require (
 	github.com/armon/go-metrics v0.4.0 // indirect
-	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/go-systemd v0.0.0-20190719114852-fd7a80b32e1f // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -100,7 +96,6 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/opentracing-contrib/go-observer v0.0.0-20170622124052-a52f23424492 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

@@ -38,9 +38,9 @@ func init() {
 		Logger.Log("Fail to load remote config", err)
 	}
 
-	//if err := Sub("mysql", &MysqlConfig); err != nil {
-	//	Logger.Log("Fail to parse mysql", err)
-	//}
+	if err := Sub("mysql", &MysqlConfig); err != nil {
+		Logger.Log("Fail to parse mysql", err)
+	}
 	if err := Sub("trace", &TraceConfig); err != nil {
 		Logger.Log("Fail to parse trace", err)
 	}
@@ -78,6 +78,7 @@ func LoadRemoteConfig() (err error) {
 		configServer, bootstrap.ConfigServerConfig.Label,
 		bootstrap.DiscoverConfig.ServiceName, bootstrap.ConfigServerConfig.Profile,
 		viper.Get(kConfigType))
+	fmt.Printf("confAddr: %s\n", confAddr)
 	resp, err := http.Get(confAddr)
 	if err != nil {
 		return
@@ -93,7 +94,7 @@ func LoadRemoteConfig() (err error) {
 }
 
 func Sub(key string, value interface{}) error {
-	Logger.Log("配置文件的前缀为：", key)
+	// Logger.Log("配置文件的前缀为：", key)
 	sub := viper.Sub(key)
 	sub.AutomaticEnv()
 	sub.SetEnvPrefix(key)

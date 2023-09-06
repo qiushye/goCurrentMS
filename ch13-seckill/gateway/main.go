@@ -3,6 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/afex/hystrix-go/hystrix"
 	"github.com/go-kit/kit/log"
 	_ "github.com/longjoy/micro-go-book/ch13-seckill/gateway/config"
@@ -12,18 +18,13 @@ import (
 	"github.com/openzipkin/zipkin-go"
 	zipkinhttpsvr "github.com/openzipkin/zipkin-go/middleware/http"
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {
 
 	// 创建环境变量
 	var (
-		zipkinURL = flag.String("zipkin.url", "http://114.67.98.210:9411/api/v2/spans", "Zipkin server url")
+		zipkinURL = flag.String("zipkin.url", "http://127.0.0.1:9411/api/v2/spans", "Zipkin server url")
 	)
 	flag.Parse()
 

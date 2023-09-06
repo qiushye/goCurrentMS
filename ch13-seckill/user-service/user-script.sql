@@ -1,6 +1,7 @@
-create database user;
+-- create database user;
 
-drop table if exists `user`;
+-- use user;
+-- drop table if exists `user`;
 CREATE TABLE `user`
 (
     `user_id`     INT(10)      NOT NULL AUTO_INCREMENT,
